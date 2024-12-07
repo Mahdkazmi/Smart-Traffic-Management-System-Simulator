@@ -1,0 +1,362 @@
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <string>
+using namespace std;
+
+class Node
+{
+public:
+    char vertx;
+    int weight;
+    string status;
+    Node *next;
+
+    Node(char ver, int w, string st = "Clear")
+    {
+        vertx = ver;
+        weight = w;
+        next = nullptr;
+    }
+};
+
+class Graph
+{
+public:
+    Node **array;
+    int num_nodes;
+
+    Graph(int size)
+    {
+        num_nodes = size;
+        array = new Node *[num_nodes];
+        for (int i = 0; i < num_nodes; ++i)
+        {
+            array[i] = nullptr;
+        }
+    }
+
+    void addEdge(char point_1, char point_2, int weight, string st = "Clear")
+    {
+
+        int start = point_1 - 'A';
+        int end = point_2 - 'A';
+
+        Node *n_node_start = new Node(point_2, weight, st);
+        n_node_start->next = array[start];
+        array[start] = n_node_start;
+
+        Node *n_node_end = new Node(point_1, weight);
+        n_node_end->next = array[end];
+        array[end] = n_node_end;
+    }
+
+
+
+    void display_graph()
+    {
+        for (int i = 0; i < num_nodes; ++i)
+        {
+            cout << char('A' + i) << " -> ";
+            Node *temp = array[i];
+            while (temp)
+            {
+                cout << "(" << temp->vertx << ", " << temp->weight << ") ";
+                temp = temp->next;
+            }
+            cout << endl;
+        }
+    }
+
+    ~Graph()
+    {
+        for (int i = 0; i < num_nodes; ++i)
+        {
+            Node *temp = array[i];
+            while (temp)
+            {
+                Node *toDelete = temp;
+                temp = temp->next;
+                delete toDelete;
+            }
+        }
+        delete[] array;
+    }
+};
+
+class Vehicle
+{
+public:
+    string ID;
+    char Start;
+    char End;
+
+    Vehicle()
+    {
+        ID = "";
+        Start = '\0';
+        End = '\0';
+    }
+
+    void add_vehicle(string id, char start, char end)
+    {
+        ID = id;
+        Start = start;
+        End = end;
+    }
+
+    void display()
+    {
+        cout << "Vehicle ID: " << ID << ", Start: " << Start << ", End: " << End << endl;
+    }
+};
+
+class Trafic_signal
+{
+public:
+    char node;
+    int green_duration;
+
+    Trafic_signal()
+    {
+        node = '\0';
+        green_duration = 0;
+    }
+
+    void add_signal(char n, int duration)
+    {
+        node = n;
+        green_duration = duration;
+    }
+
+    void display()
+    {
+        cout << "Traffic Signal Node: " << node << ", Green Duration: " << green_duration << "s" << endl;
+    }
+};
+class EmergencyVehicle
+{
+public:
+    string ID;
+    char Start;
+    char End;
+    string PriorityLevel;
+
+    EmergencyVehicle()
+    {
+        ID = "";
+        Start = '\0';
+        End = '\0';
+        PriorityLevel = "";
+    }
+
+    void add_emergency_vehicle(string id, char start, char end, string priority)
+    {
+        ID = id;
+        Start = start;
+        End = end;
+        PriorityLevel = priority;
+    }
+
+    void display()
+    {
+        cout << "Emergency Vehicle ID: " << ID << ", Start: " << Start << ", End: " << End << ", Priority Level: " << PriorityLevel << endl;
+    }
+};
+
+// read graph
+void read_nodes(string filename, Graph &g)
+{
+    ifstream file(filename);
+    string line;
+
+    getline(file, line); // Skip header
+    while (getline(file, line))
+    {
+        stringstream ss(line);
+        string a, b, w; // a,b,w->start end and weight
+
+        getline(ss, a, ',');
+        getline(ss, b, ',');
+        getline(ss, w);
+
+        char start = a[0];
+        char end = b[0];
+        int weight = stoi(w);
+
+        g.addEdge(start, end, weight);
+    }
+    file.close();
+}
+
+// read vehicles
+int read_vehicles(string name, Vehicle vehicles[], int max)
+{
+    ifstream file(name);
+    string line;
+    int count = 0;
+
+    getline(file, line); // Skip first line
+
+    while (getline(file, line) && count < max)
+    {
+        stringstream ss(line);
+        string id, start, end;
+
+        getline(ss, id, ',');
+        getline(ss, start, ',');
+        getline(ss, end);
+
+        vehicles[count].add_vehicle(id, start[0], end[0]);
+        count++;
+    }
+    file.close();
+    return count;
+}
+
+// Function to read traffic signals from a CSV file
+int read_trafic_signals(string name, Trafic_signal signals[], int max)
+{
+    ifstream file(name);
+    string line;
+    int count = 0;
+
+    getline(file, line); // Skip header
+    while (getline(file, line) && count < max)
+    {
+        stringstream ss(line);
+        string node, time;
+
+        getline(ss, node, ',');
+        getline(ss, time);
+
+        char n = node[0];
+        int t = stoi(time); // time is string so we need to convert it to int
+
+        signals[count].add_signal(n, t);
+        count++;
+    }
+    file.close();
+    return count;
+}
+
+int read_emergency_vehicles(string name, EmergencyVehicle emergencyVehicles[], int max)
+{
+    ifstream file(name);
+    string line;
+    int count = 0;
+
+    getline(file, line); // Skip header
+
+    while (getline(file, line) && count < max)
+    {
+        stringstream ss(line);
+        string id, start, end, priority;
+
+        getline(ss, id, ',');
+        getline(ss, start, ',');
+        getline(ss, end, ',');
+        getline(ss, priority);
+
+        emergencyVehicles[count].add_emergency_vehicle(id, start[0], end[0], priority);
+        count++;
+    }
+    file.close();
+    return count;
+}
+
+void read_road_closures(string filename, Graph &g)
+{
+    ifstream file(filename);
+    string line;
+
+    getline(file, line); // Skip header
+    while (getline(file, line))
+    {
+        stringstream ss(line);
+        string a, b, status;
+
+        getline(ss, a, ','); // Start node
+        getline(ss, b, ','); // End node
+        getline(ss, status); // Road status
+
+        char start = a[0];
+        char end = b[0];
+
+        // Update the adjacency list to store the road status
+        Node *temp = g.array[start - 'A'];
+        while (temp)
+        {
+            if (temp->vertx == end)
+            {
+                temp->status = status;                                                      // Update the road status
+                cout << "Road from " << start << " to " << end << " is " << status << endl; // Print the update
+                break;
+            }
+            temp = temp->next;
+        }
+
+        // Repeat for the reverse direction
+        temp = g.array[end - 'A'];
+        while (temp)
+        {
+            if (temp->vertx == start)
+            {
+                temp->status = status;                                                      // Update the road status
+                cout << "Road from " << end << " to " << start << " is " << status << endl; // Print the update
+                break;
+            }
+            temp = temp->next;
+        }
+    }
+    file.close();
+}
+
+int main()
+{
+    // Step 1: Initialize Graph
+    int number_verteces = 26;
+    Graph g(number_verteces);
+    cout << number_verteces << endl;
+    // Step 2 : Read Graph Data
+    read_nodes("road.csv", g);
+
+    // Display the graph
+    g.display_graph();
+    cout << endl;
+    // char startVertex = 'A'; // Change this to the desired starting vertex
+    // char endVertex = 'F';   // Change this to the desired end vertex
+    // g.dijkstra(startVertex, endVertex);
+    // // Step 3: Read Vehicles
+    // Vehicle vehicles[100];
+    // int vehicleCount = read_vehicles("vehicles.csv", vehicles, 100);
+
+    // // Display vehicles
+    // for (int i = 0; i < vehicleCount; ++i)
+    // {
+    //     vehicles[i].display();
+    // }
+
+    // Step 4: Read Traffic Signals
+    // Trafic_signal signals[100];
+    // int signalCount = read_trafic_signals("traffic_signals.csv", signals, 100);
+
+    // // Display traffic signals
+    // for (int i = 0; i < signalCount; ++i)
+    // {
+    //     signals[i].display();
+    // }
+
+    // EmergencyVehicle emergencyVehicles[100];
+    // int c;
+    // c = read_emergency_vehicles("emergency_vehicles.csv", emergencyVehicles, 100);
+
+    // // for (int i = 0; i < c; ++i)
+    // // {
+    // //     emergencyVehicles[i].display();
+    // // }
+    // cout << "\nReading road closures from 'road_closures.csv'..." << endl;
+    // read_road_closures("road_closures.csv", g);
+
+    return 0;
+}
