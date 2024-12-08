@@ -1,0 +1,62 @@
+
+    void print_path__bfs(char start, char end)
+{
+    struct PathNode {
+        int path[26];
+        int length;
+    };
+
+    PathNode stack[10000];
+    int top_index = -1;    
+    PathNode path_array;
+    path_array.path[0] = start - 'A';
+    path_array.length = 1;//initailze length 1 then increase
+    stack[top_index] = path_array;
+    top_index=top_index+1;
+
+    while (top_index >= 0) 
+    {
+       
+        PathNode a = stack[top_index];
+        top_index--;
+        int last = a.path[a.length - 1];
+        if (last == end - 'A')
+        {
+            string string_path;
+            for (int i = 0; i < a.length; ++i)
+                string_path += (a.path[i] + 'A');
+            int weight = findPathWeight(string_path);
+            cout << string_path << " Total Weight: " << weight << endl;
+        }
+        else
+        {
+            Node *temp = array[last];
+            while (temp)
+            {
+                int adjVertex = temp->vertx - 'A';
+                bool visited = false;
+                for (int i = 0; i < a.length; ++i)
+                {
+                    if (a.path[i] == adjVertex)
+                    {
+                        visited = true;
+                        break;
+                    }
+                }
+
+                if (!visited && temp->status != "Blocked")
+                {
+                    PathNode new_Path;
+
+                    for (int i = 0; i < a.length; ++i)
+                    {
+                        new_Path.path[i] = a.path[i];
+                    }
+                    new_Path.path[a.length] = adjVertex;
+                    new_Path.length = a.length + 1;
+
+                    // Push the new path onto the stack
+                    stack[++top_index] = new_Path;
+                }
+                temp = temp->next;
+            }
