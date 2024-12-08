@@ -1,0 +1,123 @@
+ void dijkstra(char a, char b, int roadCounts[26][26])
+    {
+        // index to iterate list
+        int A_point = a - 'A';
+        int B_point = b - 'A';
+        int *distance = new int[size];
+        bool *visited = new bool[size];  // check which noode has been visited
+        char *prevoius = new char[size]; // array to store prevoius node
+        int *PQ = new int[size];         // priority queue
+        int queue_size = 0;
+
+        for (int i = 0; i < size; i++)
+        {
+            distance[i] = 10000000; // in priority queue each node distance first marked as infinity so we take large number
+            visited[i] = false;
+            prevoius[i] = '\0';
+            PQ[i] = -1;
+        }
+        distance[A_point] = 0;
+        PQ[queue_size++] = A_point;
+
+        while (queue_size > 0)
+        {
+            int min_index = -1;
+            int value = 10000000;
+            for (int i = 0; i < queue_size; i++)
+            {
+                int k = PQ[i];
+                if (!visited[k] && distance[k] < value)
+                {
+                    value = distance[k];
+                    min_index = k;
+                }
+            }
+
+            if (min_index == -1)
+                break;
+
+            for (int i = 0; i < queue_size; i++)
+            {
+                if (PQ[i] == min_index)
+                {
+                    queue_size = queue_size - 1;
+                    PQ[i] = PQ[queue_size];
+                    break;
+                }
+            }
+
+            visited[min_index] = true;
+
+            Node *temp = array[min_index];
+            while (temp)
+            {
+                int index = temp->vertx - 'A';
+
+                if (temp->status == "Blocked") // skip if road is blocked
+                {
+                    temp = temp->next;
+                    continue;
+                }
+
+                if (!visited[index] && distance[min_index] + temp->weight < distance[index])
+                {
+                    distance[index] = distance[min_index] + temp->weight;
+                    prevoius[index] = min_index + 'A';
+
+                    bool inQueue = false;
+                    for (int i = 0; i < queue_size; i++)
+                    {
+                        if (PQ[i] == index)
+                        {
+                            inQueue = true;
+                            break;
+                        }
+                    }
+                    if (!inQueue)
+                    {
+                        PQ[queue_size++] = index;
+                    }
+                }
+                temp = temp->next;
+            }
+        }
+
+        char path[size];
+        int l = 0; // lenght of path
+
+        int i = B_point;
+        while (i != '\0' - 'A')
+        {
+            path[l] = i + 'A';
+            l++;
+            i = prevoius[i] - 'A';
+        }
+        // reverse the path as it store in reverse oder so we revrese it and then print
+        for (int i = 0; i < l / 2; i++)
+        {
+            char temp = path[i];
+            path[i] = path[l - 1 - i];
+            path[l - 1 - i] = temp;
+        }
+        // count the number of times each road is used and vehciles are counted on basis of path
+        for (int i = 0; i < l - 1; i++)
+        {
+            char A_point = path[i];
+            char B_point = path[i + 1];
+            roadCounts[A_point - 'A'][B_point - 'A'] = roadCounts[A_point - 'A'][B_point - 'A'] + 1;
+            roadCounts[B_point - 'A'][A_point - 'A'] = roadCounts[B_point - 'A'][A_point - 'A'] + 1;
+        }
+
+        // printing path
+        cout << "Shortest path from " << a << " to " << b << ": ";
+        for (int i = 0; i < l; i++)
+        {
+            cout << path[i] << " ";
+        }
+        cout << "with total distance: " << distance[B_point] << endl;
+
+        // delete[] distance;
+        // delete[] visited;
+        // delete[] prevoius;
+        // delete[] PQ;
+    }
