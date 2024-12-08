@@ -92,6 +92,11 @@ Muhammad Azmat(23i-2651)
 ---
 
 ### Sample Outputs
-
+![Screenshot 2024-12-08 225958](https://github.com/user-attachments/assets/75b974b1-f456-4232-8c1e-099fd364254f)
+![Screenshot 2024-12-08 230026](https://github.com/user-attachments/assets/4d844b67-f6df-4909-b44f-e4d63ffcd64c)
+![Screenshot 2024-12-08 230101](https://github.com/user-attachments/assets/b29ca22d-bfc2-4267-8e1b-d1408ed6f434)
+![Screenshot 2024-12-08 230127](https://github.com/user-attachments/assets/3a9a0a78-0a49-4395-bfdd-0836aab61a19)
+![Screenshot 2024-12-08 230152](https://github.com/user-attachments/assets/0b212f62-8e21-4183-bc99-c07e8bec729d)
+![Screenshot 2024-12-08 230235](https://github.com/user-attachments/assets/1dc8a212-c08d-48cb-b000-ea6bc9790bda)
 
 
