@@ -1,0 +1,24 @@
+class EmergencyVehicle
+{
+public:
+    string ID;
+    char Start;
+    char End;
+    string PriorityLevel;
+
+    EmergencyVehicle()
+    {
+        ID = "";
+        Start = '\0';
+        End = '\0';
+        PriorityLevel = "";
+    }
+
+    void add_emergency_vehicle(string id, char start, char end, string priority)
+    {
+        ID = id;
+        Start = start;
+        End = end;
+        PriorityLevel = priority;
+    }
+};
