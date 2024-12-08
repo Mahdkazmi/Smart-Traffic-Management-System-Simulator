@@ -1,0 +1,23 @@
+class Trafic_signal
+{
+public:
+    char node;
+    int green_duration;
+
+    Trafic_signal()
+    {
+        node = '\0';
+        green_duration = 0;
+    }
+
+    void add_signal(char n, int duration)
+    {
+        node = n;
+        green_duration = duration;
+    }
+
+    void display()
+    {
+        cout << "Interaction " << node << ", Green Time: " << green_duration << "s" << endl;
+    }
+};
