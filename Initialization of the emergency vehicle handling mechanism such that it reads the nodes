@@ -1,0 +1,49 @@
+class EmergencyVehicle
+{
+public:
+    string ID;
+    char Start;
+    char End;
+    string PriorityLevel;
+
+    EmergencyVehicle()
+    {
+        ID = "";
+        Start = '\0';
+        End = '\0';
+        PriorityLevel = "";
+    }
+
+    void add_emergency_vehicle(string id, char start, char end, string priority)
+    {
+        ID = id;
+        Start = start;
+        End = end;
+        PriorityLevel = priority;
+    }
+};
+
+// read graph
+void read_nodes(string filename, Graph &g)
+{
+    ifstream file(filename);
+    string line;
+
+    getline(file, line); // Skip header
+    while (getline(file, line))
+    {
+        stringstream ss(line);
+        string a, b, w; // a,b,w->start end and weight
+
+        getline(ss, a, ',');
+        getline(ss, b, ',');
+        getline(ss, w);
+
+        char start = a[0];
+        char end = b[0];
+        int weight = stoi(w);
+
+        g.addEdge(start, end, weight);
+    }
+    file.close();
+}
