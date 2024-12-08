@@ -1,0 +1,25 @@
+class Vehicle
+{
+public:
+    string ID;
+    char Start;
+    char End;
+
+    Vehicle()
+    {
+        ID = "";
+        Start = '\0';
+        End = '\0';
+    }
+
+    void add_vehicle(string id, char start, char end)
+    {
+        ID = id;
+        Start = start;
+        End = end;
+    }
+    void display()
+    {
+        cout << "vehicle  " << ID << ", point  " << Start << " to " << End << endl;
+    }
+};
