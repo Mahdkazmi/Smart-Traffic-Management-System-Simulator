@@ -1,0 +1,108 @@
+ while (check)
+    {
+        cout << endl;
+        cout << "Smart Traffic Management System Simulator" << endl;
+
+        cout << "1. Display City Traffic Network" << endl;
+        cout << "2. Display Traffic Signal" << endl;
+        cout << "3. Display Congestion Status" << endl;
+        cout << "4. Display Blocked Road" << endl;
+        cout << "5. Handle Emergency Vehicle Routing" << endl;
+        cout << "6. Block Road due to Accident" << endl;
+        cout << "7. Simulate Vehicle Routing " << endl;
+        cout << "8. Display all path " << endl;
+        cout << "9. Exit Simulation" << endl;
+        cout << "Enter your Choice: ";
+
+        cin >> choice;
+
+        if (choice == 1)
+        {
+            cout << "Displaying City Traffic Network..." << endl;
+            g.display_graph();
+            cout << endl;
+        }
+        else if (choice == 2)
+        {
+            cout << "Displaying Traffic Signal..." << endl;
+            for (int i = 0; i < signalCount; ++i)
+            {
+                signals[i].display();
+            }
+        }
+        else if (choice == 3)
+        {
+            cout << "Displaying Congestion Status...\n";
+            int vehicleCount = read_vehicles("vehicles.csv", vehicles, 100);
+            cout << "\nCalculating routes for all vehicles:" << endl;
+            for (int i = 0; i < vehicleCount; ++i)
+            {
+                g.dijkstra(vehicles[i].Start, vehicles[i].End, roadCounts);
+            }
+            for (int i = 0; i < number_verteces; i++)
+            {
+                for (int j = i + 1; j < number_verteces; j++)
+                {
+                    if (roadCounts[i][j] > 0)
+                    {
+                        cout << char('A' + i) << " -> " << char('A' + j)
+                             << ": " << roadCounts[i][j] << " vehicles" << endl;
+                    }
+                }
+            }
+        }
+        else if (choice == 4)
+        {
+            cout << "Displaying Blocked Road...\n";
+            read_road_closures("road_closures.csv", g);
+            g.displayblockroads();
+        }
+        else if (choice == 5)
+        {
+            cout << "Routing Emergency Vehicles...\n";
+            cout << "Enter the route for emergency vehicle: ";
+            char start, end;
+            cout << "start: ";
+            cin >> start;
+            cout << "end: ";
+            cin >> end;
+            g.dijkstra(start, end, roadCounts);
+        }
+        else if (choice == 6)
+        {
+            cout << "Blocking a Road...\n";
+            cout << "Enter the road to block: ";
+            char start, end;
+            cout << "start: ";
+            cin >> start;
+            cout << "end: ";
+            cin >> end;
+            g.Blocking_road(start, end);
+        }
+        else if (choice == 7)
+        {
+            cout << "Simulating Vehicle Routing for All Paths..." << endl;
+            int vehicleCount = read_vehicles("vehicles.csv", vehicles, 100);
+            simulate_vehicles(g, vehicles, vehicleCount, number_verteces);
+        }
+        else if (choice == 8)
+        {
+            cout << "Displaying all path..." << endl;
+            cout << "Enter the start point: ";
+            char start;
+            cin >> start;
+            cout << "Enter the end point: ";
+            char end;
+            cin >> end;
+            g.print_path_bfs(start, end);
+        }
+        else if (choice == 9)
+        {
+            cout << "Exiting Simulation...\n";
+            check = false;
+        }
+        else
+        {
+            cout << "Invalid choice. Please try again.\n";
+        }
+    }
