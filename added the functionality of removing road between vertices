@@ -1,0 +1,51 @@
+void removeEdge(char point_1, char point_2)
+    {
+        int a = point_1 - 'A';
+        int b = point_2 - 'A';
+
+        // Remove edge from point_1 to point_2
+        Node *current = array[a];
+        Node *prev = nullptr;
+
+        while (current != nullptr && current->vertx != point_2)
+        {
+            prev = current;
+            current = current->next;
+        }
+
+        if (current != nullptr)
+        {
+            if (prev == nullptr)
+            {
+                array[a] = current->next;
+            }
+            else
+            {
+                prev->next = current->next;
+            }
+            delete current;
+        }
+
+        // Remove edge from point_2 to point_1
+        current = array[b];
+        prev = nullptr;
+
+        while (current != nullptr && current->vertx != point_1)
+        {
+            prev = current;
+            current = current->next;
+        }
+
+        if (current != nullptr)
+        {
+            if (prev == nullptr)
+            {
+                array[b] = current->next;
+            }
+            else
+            {
+                prev->next = current->next;
+            }
+            delete current;
+        }
+    }
