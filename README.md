@@ -2,10 +2,7 @@
 
 ### Overview
 The **Smart Traffic Management System Simulator** is a project designed to emulate real-world urban traffic management. It aims to optimize traffic flow in a city using data structures. This project was assigned to us for our data structures course. 
-This project was made by:
-Abdullah ilays(23i-2603)
-Mahd kazmi(23i-2587)
-Muhammad Azmat(23i-2651)
+
 
 ---
 
